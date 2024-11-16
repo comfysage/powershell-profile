@@ -288,11 +288,26 @@ $PSRColors = @{
 
 $PSROptions = @{
     ContinuationPrompt = '  '
+    EditMode = 'vi'
 }
 Set-PSReadLineOption @PSROptions
 Set-PSReadLineOption -Colors $PSRColors
 Set-PSReadLineKeyHandler -Chord 'Ctrl+f' -Function ForwardWord
 Set-PSReadLineKeyHandler -Chord 'Enter' -Function ValidateAndAcceptLine
+
+function OnViModeChange {
+    if ($args[0] -eq 'Command') {
+        # Set the cursor to a blinking block.
+        Write-Host -NoNewLine "`e[1 q"
+    } elseif ($args[0] -eq 'Insert') {
+        # Set the cursor to a blinking line.
+        Write-Host -NoNewLine "`e[5 q"
+    } else {
+      # Set the cursor to a blinking line.
+      Write-Host -NoNewLine "`e[5 q"
+    }
+}
+Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler $Function:OnViModeChange
 
 $scriptblock = {
     param($wordToComplete, $commandAst, $cursorPosition)
