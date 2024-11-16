@@ -350,15 +350,25 @@ if (Get-Command zoxide -ErrorAction SilentlyContinue) {
 Set-Alias -Name z -Value __zoxide_z -Option AllScope -Scope Global -Force
 Set-Alias -Name zi -Value __zoxide_zi -Option AllScope -Scope Global -Force
 
-# install fzf
+# install tools
 
-if (!$(Get-Command fzf -ErrorAction SilentlyContinue)) {
-    Write-Host "fzf command not found. Attempting to install via winget..."
-    try {
-        winget install -e --id junegunn.fzf
-        Write-Host "fzf installed successfully."
-    } catch {
-        Write-Error "Failed to install fzf. Error: $_"
+$(
+  $( "rg", "BurntSushi.ripgrep.MSVC" ),
+  $( "fzf", "junegunn.fzf" ),
+  $( "yazi", "sxyazi.yazi" )
+) | foreach {
+    $cmd = $_[0]
+    $toolid = $_[1]
+    if (!$(Get-Command $cmd -ErrorAction SilentlyContinue)) {
+        Write-Host "$cmd command not found."
+        try {
+            Write-Host "Attempting to install via winget..."
+            Write-Host "Installing $toolid..."
+            winget install -e --id $toolid
+            Write-Host "$cmd installed successfully."
+        } catch {
+            Write-Error "Failed to install $cmd. Error: $_"
+        }
     }
 }
 
