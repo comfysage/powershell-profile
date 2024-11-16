@@ -304,7 +304,7 @@ function Get-Theme {
     if (Test-Path -Path $PROFILE.CurrentUserAllHosts -PathType leaf) {
         $existingTheme = Select-String -Raw -Path $PROFILE.CurrentUserAllHosts -Pattern "starship init powershell"
         if ($null -ne $existingTheme) {
-            Invoke-Expression $existingTheme
+            Invoke-Expression "$existingTheme" | Invoke-Expression
             return
         }
     } else {
