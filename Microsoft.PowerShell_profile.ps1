@@ -139,7 +139,7 @@ Set-Alias -Name vi -Value $EDITOR
 function Edit-Profile {
     vi $PROFILE.CurrentUserAllHosts
 }
-function touch($file) { "" | Out-File $file -Encoding ASCII }
+function touch($file) { "" | Out-File $file -Encoding utf8 }
 function ff($name) {
     Get-ChildItem -recurse -filter "*${name}*" -ErrorAction SilentlyContinue | ForEach-Object {
         Write-Output "$($_.FullName)"
