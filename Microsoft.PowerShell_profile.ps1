@@ -302,13 +302,13 @@ Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock $scriptblock
 # Get theme from profile.ps1 or use a default theme
 function Get-Theme {
     if (Test-Path -Path $PROFILE.CurrentUserAllHosts -PathType leaf) {
-        $existingTheme = Select-String -Raw -Path $PROFILE.CurrentUserAllHosts -Pattern "oh-my-posh init pwsh --config"
+        $existingTheme = Select-String -Raw -Path $PROFILE.CurrentUserAllHosts -Pattern "starship init powershell"
         if ($null -ne $existingTheme) {
             Invoke-Expression $existingTheme
             return
         }
     } else {
-        oh-my-posh init pwsh --config https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/cobalt2.omp.json | Invoke-Expression
+        starship init powershell | Invoke-Expression
     }
 }
 
