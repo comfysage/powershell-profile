@@ -114,10 +114,10 @@ $EDITOR = if (Test-CommandExists nvim) { 'nvim' }
           elseif (Test-CommandExists notepad++) { 'notepad++' }
           elseif (Test-CommandExists sublime_text) { 'sublime_text' }
           else { 'notepad' }
-Set-Alias -Name vim -Value $EDITOR
+Set-Alias -Name vi -Value $EDITOR
 
 function Edit-Profile {
-    vim $PROFILE.CurrentUserAllHosts
+    vi $PROFILE.CurrentUserAllHosts
 }
 function touch($file) { "" | Out-File $file -Encoding ASCII }
 function ff($name) {
@@ -245,7 +245,7 @@ function docs { Set-Location -Path $HOME\Documents }
 function dtop { Set-Location -Path $HOME\Desktop }
 
 # Quick Access to Editing the Profile
-function ep { vim $PROFILE }
+function ep { vi $PROFILE }
 
 # Simplified Process Management
 function k9 { Stop-Process -Name $args[0] }
