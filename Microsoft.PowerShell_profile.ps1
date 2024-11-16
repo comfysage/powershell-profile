@@ -36,7 +36,26 @@ if (Test-Path($ChocolateyProfile)) {
 }
 
 # Check for Profile Updates
-function Update-Profile {
+function global:pwsh:fetch {
+    if (-not $global:canConnectToGitHub) {
+        Write-Host "Skipping profile update check due to GitHub.com not responding within 1 second." -ForegroundColor Yellow
+        return
+    }
+    try {
+        $url = "https://raw.githubusercontent.com/comfysage/powershell-profile/main/Microsoft.PowerShell_profile.ps1"
+        $oldhash = Get-FileHash $PROFILE
+        Invoke-RestMethod $url -OutFile "$env:temp/Microsoft.PowerShell_profile.ps1"
+        $newhash = Get-FileHash "$env:temp/Microsoft.PowerShell_profile.ps1"
+        if ($newhash.Hash -ne $oldhash.Hash) {
+            Write-Host "Profile has updates. Update using pwsh:update" -ForegroundColor Magenta
+        }
+    } catch {
+        Write-Error "Unable to check for `$profile updates"
+    } finally {
+        Remove-Item "$env:temp/Microsoft.PowerShell_profile.ps1" -ErrorAction SilentlyContinue
+    }
+}
+function global:pwsh:update {
     if (-not $global:canConnectToGitHub) {
         Write-Host "Skipping profile update check due to GitHub.com not responding within 1 second." -ForegroundColor Yellow
         return
@@ -57,7 +76,7 @@ function Update-Profile {
         Remove-Item "$env:temp/Microsoft.PowerShell_profile.ps1" -ErrorAction SilentlyContinue
     }
 }
-Update-Profile
+pwsh:fetch
 
 function Update-PowerShell {
     if (-not $global:canConnectToGitHub) {
@@ -66,7 +85,7 @@ function Update-PowerShell {
     }
 
     try {
-        Write-Host "Checking for PowerShell updates..." -ForegroundColor Cyan
+        Write-Debug "Checking for PowerShell updates..."
         $updateNeeded = $false
         $currentVersion = $PSVersionTable.PSVersion.ToString()
         $gitHubApiUrl = "https://api.github.com/repos/PowerShell/PowerShell/releases/latest"
@@ -81,7 +100,7 @@ function Update-PowerShell {
             winget upgrade "Microsoft.PowerShell" --accept-source-agreements --accept-package-agreements
             Write-Host "PowerShell has been updated. Please restart your shell to reflect changes" -ForegroundColor Magenta
         } else {
-            Write-Host "Your PowerShell is up to date." -ForegroundColor Green
+            Write-Debug "PowerShell is up to date."
         }
     } catch {
         Write-Error "Failed to update PowerShell. Error: $_"
@@ -378,7 +397,7 @@ function Show-Help {
 PowerShell Profile Help
 =======================
 
-Update-Profile - Checks for profile updates from a remote repository and updates if necessary.
+pwsh:update - Checks for profile updates from a remote repository and updates if necessary.
 
 Update-PowerShell - Checks for the latest PowerShell release and updates if a new version is available.
 
