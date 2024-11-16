@@ -271,21 +271,26 @@ function cpy { Set-Clipboard $args[0] }
 function pst { Get-Clipboard }
 
 # Enhanced PowerShell Experience
-Set-PSReadLineOption -Colors @{
-    Command = 'Yellow'
-    Parameter = 'Cyan'
-    String = 'Green'
+$PSRColors = @{
+    # syntax
+    Command            = $PSStyle.Foreground.Yellow
+    Parameter          = $PSStyle.Foreground.Cyan
+    String             = $PSStyle.Foreground.Green
+    Variable           = $PSStyle.Foreground.Green
+    Type               = $PSStyle.Foreground.Yellow
+    Number             = $PSStyle.Foreground.Magenta
+
+    # ui
+    Selection          = $PSStyle.Background.Black
+    InLinePrediction   = $PSStyle.Foreground.BrightWhite
+    Error              = $PSStyle.Foreground.Red
 }
 
 $PSROptions = @{
     ContinuationPrompt = '  '
-    Colors             = @{
-    Parameter          = $PSStyle.Foreground.Cyan
-    Selection          = $PSStyle.Background.Black
-    InLinePrediction   = $PSStyle.Foreground.BrightBlack
-    }
 }
 Set-PSReadLineOption @PSROptions
+Set-PSReadLineOption -Colors $PSRColors
 Set-PSReadLineKeyHandler -Chord 'Ctrl+f' -Function ForwardWord
 Set-PSReadLineKeyHandler -Chord 'Enter' -Function ValidateAndAcceptLine
 
