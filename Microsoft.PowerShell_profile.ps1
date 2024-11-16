@@ -254,28 +254,7 @@ function k9 { Stop-Process -Name $args[0] }
 function la { Get-ChildItem -Path . -Force | Format-Table -AutoSize }
 function ll { Get-ChildItem -Path . -Force -Hidden | Format-Table -AutoSize }
 
-# Git Shortcuts
-function gs { git status }
-
-function ga { git add . }
-
-function gc { param($m) git commit -m "$m" }
-
-function gp { git push }
-
 function g { __zoxide_z github }
-
-function gcl { git clone "$args" }
-
-function gcom {
-    git add .
-    git commit -m "$args"
-}
-function lazyg {
-    git add .
-    git commit -m "$args"
-    git push
-}
 
 # Quick Access to System Information
 function sysinfo { Get-ComputerInfo }
@@ -412,14 +391,6 @@ k9 <name> - Kills a process by name.
 la - Lists all files in the current directory with detailed formatting.
 
 ll - Lists all files, including hidden, in the current directory with detailed formatting.
-
-gs - Shortcut for 'git status'.
-
-ga - Shortcut for 'git add .'.
-
-gc <message> - Shortcut for 'git commit -m'.
-
-gp - Shortcut for 'git push'.
 
 g - Changes to the GitHub directory.
 
