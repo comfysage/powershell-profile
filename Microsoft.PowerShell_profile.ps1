@@ -350,6 +350,18 @@ if (Get-Command zoxide -ErrorAction SilentlyContinue) {
 Set-Alias -Name z -Value __zoxide_z -Option AllScope -Scope Global -Force
 Set-Alias -Name zi -Value __zoxide_zi -Option AllScope -Scope Global -Force
 
+# install fzf
+
+if (!$(Get-Command fzf -ErrorAction SilentlyContinue)) {
+    Write-Host "fzf command not found. Attempting to install via winget..."
+    try {
+        winget install -e --id junegunn.fzf
+        Write-Host "fzf installed successfully."
+    } catch {
+        Write-Error "Failed to install fzf. Error: $_"
+    }
+}
+
 # Help Function
 function Show-Help {
     @"
